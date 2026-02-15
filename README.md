@@ -9,7 +9,7 @@ Limited citizen participation in keeping the environment clean
 This results in pollution, health hazards, and inefficient waste collection.
 
 💡 Our Solution
-We developed two main applications to address these issues:
+We developed two main idea in one application to address these issues:
 
 1️⃣ Garbage Bin Map
 Displays the locations of all garbage bins in the neighborhood
