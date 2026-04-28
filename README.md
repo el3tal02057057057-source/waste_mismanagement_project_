@@ -1,48 +1,50 @@
-♻️ Waste Mismanagement
-A community-focused digital solution aimed at improving waste management through interactive applications.
+# React + TypeScript + Vite
 
-📌 Problem Statement
-Many neighborhoods struggle with waste mismanagement due to:
-Difficulty locating garbage bins
-Lack of real-time monitoring of dirty areas
-Limited citizen participation in keeping the environment clean
-This results in pollution, health hazards, and inefficient waste collection.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-💡 Our Solution
-We developed two main idea in one application to address these issues:
+Currently, two official plugins are available:
 
-1️⃣ Garbage Bin Map
-Displays the locations of all garbage bins in the neighborhood
-Helps residents dispose of waste properly and efficiently
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-2️⃣ Community Cleanliness App
-The city is divided into small squares on the map
-Citizens can report dirty areas by taking a photo and uploading it
-Reported squares turn red on the map
-Once cleaned by authorities, the square returns to green
-Reporters receive points or discount coupons redeemable for various rewards
-These solutions encourage community participation and make waste management more efficient and interactive.
+## Expanding the ESLint configuration
 
-⚙️ How It Works
-Users register and choose their role (resident or supervisor)
-Residents report dirty areas or locate garbage bins
-The system updates the map in real time
-Authorities track and clean reported areas
-Users earn points or rewards for active participation
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-🎯 Project Objectives
-Facilitate proper waste disposal
-Promote active community engagement
-Enable real-time monitoring of cleanliness
-Support data-driven waste management strategies
+- Configure the top-level `parserOptions` property like this:
 
-👥 Team
-We are a team of students passionate about using technology to solve real-world problems practically and effectively.
-Our project, Waste Mismanagement, provides a digital solution to improve community cleanliness by mapping garbage bins, tracking dirty areas, and incentivizing citizen participation.
-We believe that effective solutions start with understanding the problem, then building systems that truly serve the users.
+```js
+export default tseslint.config({
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-🚀 Future Improvements
-GPS-based automatic reporting
-Interactive dashboard showing dirty areas in real time
-Integration with local schools and businesses for community challenges
-Data analytics to predict high-risk dirty zones
+- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
+- Optionally add `...tseslint.configs.stylisticTypeChecked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+
+```js
+// eslint.config.js
+import react from 'eslint-plugin-react'
+
+export default tseslint.config({
+  // Set the react version
+  settings: { react: { version: '18.3' } },
+  plugins: {
+    // Add the react plugin
+    react,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended rules
+    ...react.configs.recommended.rules,
+    ...react.configs['jsx-runtime'].rules,
+  },
+})
+```
