@@ -1,162 +1,252 @@
-import { User, Zone, Report, Notification } from '../types';
+import { MobileUser, Zone, Report, Notification, DailyStats, UserRanking } from '@/types'
 
-// Mock Users
-export const mockUsers: User[] = [
+// Mock Users (from mobile app)
+export const mockUsers: MobileUser[] = [
   {
-    id: '1',
-    name: 'Ahmed Hassan',
+    id: 'user-1',
+    name: 'أحمد محمد',
     email: 'ahmed@example.com',
-    password: 'password123',
-    points: 245,
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ahmed',
+    points: 450,
+    level: 2,
+    totalReports: 15,
+    totalValidations: 23,
+    totalCleanings: 8,
+    createdAt: new Date('2024-01-15')
+  },
+  {
+    id: 'user-2',
+    name: 'فاطمة علي',
+    email: 'fatima@example.com',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=fatima',
+    points: 1200,
+    level: 4,
+    totalReports: 45,
+    totalValidations: 67,
+    totalCleanings: 32,
+    createdAt: new Date('2023-06-20')
+  },
+  {
+    id: 'user-3',
+    name: 'خالد سعيد',
+    email: 'khaled@example.com',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=khaled',
+    points: 320,
     level: 2,
     totalReports: 12,
-    totalValidations: 8,
+    totalValidations: 18,
     totalCleanings: 5,
-    createdAt: new Date('2024-01-15'),
+    createdAt: new Date('2024-03-10')
   },
   {
-    id: '2',
-    name: 'Sarah Ahmed',
-    email: 'sarah@example.com',
-    password: 'password123',
-    points: 520,
+    id: 'user-4',
+    name: 'نورة أحمد',
+    email: 'noura@example.com',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=noura',
+    points: 890,
     level: 3,
-    totalReports: 25,
-    totalValidations: 15,
-    totalCleanings: 12,
-    createdAt: new Date('2023-11-20'),
+    totalReports: 28,
+    totalValidations: 42,
+    totalCleanings: 15,
+    createdAt: new Date('2023-11-05')
   },
-];
+  {
+    id: 'user-5',
+    name: 'محمد علي',
+    email: 'mohammed@example.com',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=mohammed',
+    points: 150,
+    level: 1,
+    totalReports: 5,
+    totalValidations: 8,
+    totalCleanings: 2,
+    createdAt: new Date('2024-04-01')
+  }
+]
 
-// Mock Zones (Cairo area coordinates)
+// Mock Zones (around Riyadh coordinates - same as original mobile app)
 export const mockZones: Zone[] = [
-  { id: 'z1', lat: 30.0444, lng: 31.2357, status: 'clean', cleaningCount: 45 },
-  { id: 'z2', lat: 30.0450, lng: 31.2360, status: 'dirty', cleaningCount: 12 },
-  { id: 'z3', lat: 30.0440, lng: 31.2370, status: 'review', cleaningCount: 23 },
-  { id: 'z4', lat: 30.0460, lng: 31.2380, status: 'clean', cleaningCount: 67 },
-  { id: 'z5', lat: 30.0430, lng: 31.2350, status: 'clean', cleaningCount: 34 },
-  { id: 'z6', lat: 30.0470, lng: 31.2390, status: 'dirty', cleaningCount: 8 },
-  { id: 'z7', lat: 30.0420, lng: 31.2340, status: 'clean', cleaningCount: 56 },
-  { id: 'z8', lat: 30.0480, lng: 31.2400, status: 'review', cleaningCount: 19 },
-  { id: 'z9', lat: 30.0410, lng: 31.2330, status: 'clean', cleaningCount: 41 },
-  { id: 'z10', lat: 30.0490, lng: 31.2410, status: 'dirty', cleaningCount: 5 },
-  { id: 'z11', lat: 30.0500, lng: 31.2420, status: 'clean', cleaningCount: 72 },
-  { id: 'z12', lat: 30.0510, lng: 31.2430, status: 'clean', cleaningCount: 38 },
-];
+  { id: 'zone-1', lat: 24.7136, lng: 46.6753, status: 'clean', cleaningCount: 12 },
+  { id: 'zone-2', lat: 24.7146, lng: 46.6763, status: 'dirty', cleaningCount: 3 },
+  { id: 'zone-3', lat: 24.7156, lng: 46.6773, status: 'review', cleaningCount: 5 },
+  { id: 'zone-4', lat: 24.7166, lng: 46.6783, status: 'clean', cleaningCount: 15 },
+  { id: 'zone-5', lat: 24.7176, lng: 46.6793, status: 'dirty', cleaningCount: 2 },
+  { id: 'zone-6', lat: 24.7186, lng: 46.6803, status: 'clean', cleaningCount: 20 },
+  { id: 'zone-7', lat: 24.7196, lng: 46.6813, status: 'review', cleaningCount: 4 },
+  { id: 'zone-8', lat: 24.7206, lng: 46.6823, status: 'clean', cleaningCount: 18 },
+  { id: 'zone-9', lat: 24.7116, lng: 46.6753, status: 'dirty', cleaningCount: 1 },
+  { id: 'zone-10', lat: 24.7126, lng: 46.6763, status: 'clean', cleaningCount: 14 },
+  { id: 'zone-11', lat: 24.7136, lng: 46.6773, status: 'review', cleaningCount: 6 },
+  { id: 'zone-12', lat: 24.7146, lng: 46.6783, status: 'clean', cleaningCount: 22 },
+]
 
 // Mock Reports
 export const mockReports: Report[] = [
   {
-    id: 'r1',
-    zoneId: 'z2',
-    userId: '2',
-    userName: 'Sarah Ahmed',
-    category: 'Household',
-    severity: 'high',
-    description: 'Large pile of household waste accumulated near the street corner.',
-    imageUrl: 'https://picsum.photos/seed/waste1/400/300',
-    location: { lat: 30.0450, lng: 31.2360 },
-    status: 'pending',
-    createdAt: new Date('2026-04-24T10:30:00'),
-  },
-  {
-    id: 'r2',
-    zoneId: 'z6',
-    userId: '2',
-    userName: 'Sarah Ahmed',
-    category: 'Electronic',
+    id: 'report-1',
+    zoneId: 'zone-2',
+    userId: 'user-1',
+    userName: 'أحمد محمد',
+    category: 'household',
     severity: 'medium',
-    description: 'Discarded electronics and appliances scattered on the sidewalk.',
-    imageUrl: 'https://picsum.photos/seed/waste2/400/300',
-    location: { lat: 30.0470, lng: 31.2390 },
-    status: 'in_review',
-    createdAt: new Date('2026-04-23T14:15:00'),
+    description: 'قمام كثيرة ملقاة على الأرض قرب الحديقة',
+    location: { lat: 24.7146, lng: 46.6763 },
+    status: 'pending',
+    createdAt: new Date('2026-04-28'),
+    beforeImage: 'https://picsum.photos/400/300?random=1'
   },
   {
-    id: 'r3',
-    zoneId: 'z10',
-    userId: '1',
-    userName: 'Ahmed Hassan',
-    category: 'Industrial',
-    severity: 'critical',
-    description: 'Industrial waste dump threatening nearby residential area.',
-    imageUrl: 'https://picsum.photos/seed/waste3/400/300',
-    location: { lat: 30.0490, lng: 31.2410 },
-    status: 'pending',
-    createdAt: new Date('2026-04-25T08:45:00'),
+    id: 'report-2',
+    zoneId: 'zone-5',
+    userId: 'user-3',
+    userName: 'خالد سعيد',
+    category: 'electronic',
+    severity: 'high',
+    description: 'إلكترونيات قديمة ملقاة في الشارع',
+    location: { lat: 24.7176, lng: 46.6793 },
+    status: 'in_review',
+    createdAt: new Date('2026-04-27'),
+    beforeImage: 'https://picsum.photos/400/300?random=2'
   },
-];
+  {
+    id: 'report-3',
+    zoneId: 'zone-9',
+    userId: 'user-2',
+    userName: 'فاطمة علي',
+    category: 'industrial',
+    severity: 'critical',
+    description: 'نفايات صناعية خطيرة تحتاج تنظيف عاجل',
+    location: { lat: 24.7116, lng: 46.6753 },
+    status: 'pending',
+    createdAt: new Date('2026-04-29'),
+    beforeImage: 'https://picsum.photos/400/300?random=3'
+  },
+  {
+    id: 'report-4',
+    zoneId: 'zone-3',
+    userId: 'user-1',
+    userName: 'أحمد محمد',
+    category: 'household',
+    severity: 'low',
+    description: 'صندوق قمامة ممتلئ يحتاج تفريغ',
+    location: { lat: 24.7156, lng: 46.6773 },
+    status: 'resolved',
+    createdAt: new Date('2026-04-20'),
+    resolvedAt: new Date('2026-04-22'),
+    beforeImage: 'https://picsum.photos/400/300?random=4',
+    afterImage: 'https://picsum.photos/400/300?random=5'
+  },
+  {
+    id: 'report-5',
+    zoneId: 'zone-13',
+    userId: 'user-4',
+    userName: 'نورة أحمد',
+    category: 'medical',
+    severity: 'critical',
+    description: 'نفايات طبية需要进行专业处理',
+    location: { lat: 24.7156, lng: 46.6793 },
+    status: 'pending',
+    createdAt: new Date('2026-04-29'),
+    beforeImage: 'https://picsum.photos/400/300?random=6'
+  },
+  {
+    id: 'report-6',
+    zoneId: 'zone-15',
+    userId: 'user-2',
+    userName: 'فاطمة علي',
+    category: 'other',
+    severity: 'medium',
+    description: 'حاويات قمامة مكسورة',
+    location: { lat: 24.7176, lng: 46.6813 },
+    status: 'in_review',
+    createdAt: new Date('2026-04-26'),
+    beforeImage: 'https://picsum.photos/400/300?random=7'
+  }
+]
 
 // Mock Notifications
 export const mockNotifications: Notification[] = [
   {
-    id: 'n1',
-    type: 'points_earned',
-    title: 'Points Earned!',
-    message: 'You earned 10 points for submitting a report.',
-    read: false,
-    createdAt: new Date('2026-04-25T09:00:00'),
-    data: { points: 10 },
-  },
-  {
-    id: 'n2',
+    id: 'notif-1',
     type: 'report_resolved',
-    title: 'Report Resolved',
-    message: 'Zone A7 has been cleaned! Thank you for your contribution.',
-    read: true,
-    createdAt: new Date('2026-04-24T16:30:00'),
-    data: { zoneId: 'z1' },
+    title: 'تم حل البلاغ',
+    message: 'تم تنظيف المنطقة بنجاح',
+    read: false,
+    createdAt: new Date('2026-04-28')
   },
   {
-    id: 'n3',
+    id: 'notif-2',
+    type: 'points_earned',
+    title: 'earned points',
+    message: 'لقد حصلت على 10 نقاط لتقديم بلاغ',
+    read: false,
+    createdAt: new Date('2026-04-27')
+  },
+  {
+    id: 'notif-3',
     type: 'achievement',
-    title: 'Achievement Unlocked',
-    message: 'Congratulations! You earned the "First Report" badge.',
-    read: false,
-    createdAt: new Date('2026-04-23T11:00:00'),
-    data: { badge: 'first_report' },
+    title: 'Achievement unlocked',
+    message: 'لقد أنجزت 10 بلاغات!',
+    read: true,
+    createdAt: new Date('2026-04-25')
   },
   {
-    id: 'n4',
+    id: 'notif-4',
     type: 'alert',
-    title: 'Community Alert',
-    message: 'High priority report detected in your area. Action required.',
+    title: 'تنبيه',
+    message: 'هناك منطقة قريبة منك تحتاج تنظيف',
     read: false,
-    createdAt: new Date('2026-04-25T08:00:00'),
-    data: { priority: 'high' },
-  },
-];
+    createdAt: new Date('2026-04-29')
+  }
+]
 
-// Helper functions
-export function getZoneById(zoneId: string): Zone | undefined {
-  return mockZones.find(z => z.id === zoneId);
+// Daily Statistics for the last 7 days
+export const mockDailyStats: DailyStats[] = [
+  { date: '2026-04-23', reports: 12, resolved: 8, users: 5 },
+  { date: '2026-04-24', reports: 18, resolved: 15, users: 7 },
+  { date: '2026-04-25', reports: 8, resolved: 10, users: 4 },
+  { date: '2026-04-26', reports: 22, resolved: 18, users: 9 },
+  { date: '2026-04-27', reports: 15, resolved: 12, users: 6 },
+  { date: '2026-04-28', reports: 20, resolved: 16, users: 8 },
+  { date: '2026-04-29', reports: 25, resolved: 10, users: 11 },
+]
+
+// User Rankings
+export const mockUserRankings: UserRanking[] = [
+  { userId: 'user-2', userName: 'فاطمة علي', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=fatima', points: 1200, reportsCount: 45, rank: 1 },
+  { userId: 'user-4', userName: 'نورة أحمد', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=noura', points: 890, reportsCount: 28, rank: 2 },
+  { userId: 'user-1', userName: 'أحمد محمد', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ahmed', points: 450, reportsCount: 15, rank: 3 },
+  { userId: 'user-3', userName: 'خالد سعيد', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=khaled', points: 320, reportsCount: 12, rank: 4 },
+  { userId: 'user-5', userName: 'محمد علي', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=mohammed', points: 150, reportsCount: 5, rank: 5 },
+]
+
+// Category labels
+export const categoryLabels: Record<string, string> = {
+  household: 'منزلية',
+  industrial: 'صناعية',
+  medical: 'طبية',
+  electronic: 'إلكترونية',
+  other: 'أخرى'
 }
 
-export function getReportsByZone(zoneId: string): Report[] {
-  return mockReports.filter(r => r.zoneId === zoneId);
+// Severity labels
+export const severityLabels: Record<string, string> = {
+  low: 'منخفضة',
+  medium: 'متوسطة',
+  high: 'مرتفعة',
+  critical: 'حرجة'
 }
 
-export function getZonesByStatus(status: string): Zone[] {
-  return mockZones.filter(z => z.status === status);
+// Status labels
+export const statusLabels: Record<string, string> = {
+  clean: 'نظيفة',
+  dirty: 'قذرة',
+  review: 'قيد المراجعة'
 }
 
-export function generateId(): string {
-  return Math.random().toString(36).substr(2, 9);
-}
-
-// Stats calculations
-export function getStats() {
-  const cleanZones = mockZones.filter(z => z.status === 'clean').length;
-  const dirtyZones = mockZones.filter(z => z.status === 'dirty').length;
-  const reviewZones = mockZones.filter(z => z.status === 'review').length;
-  const totalCleanings = mockZones.reduce((sum, z) => sum + z.cleaningCount, 0);
-
-  return {
-    cleanZones,
-    dirtyZones,
-    reviewZones,
-    totalZones: mockZones.length,
-    totalCleanings,
-    pendingReports: mockReports.filter(r => r.status === 'pending').length,
-  };
+// Report status labels
+export const reportStatusLabels: Record<string, string> = {
+  pending: 'قيد الانتظار',
+  in_review: 'قيد المراجعة',
+  resolved: 'تم الحل'
 }

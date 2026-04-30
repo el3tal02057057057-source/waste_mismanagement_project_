@@ -23,16 +23,25 @@ module.exports = {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#2B5D3A',
+					DEFAULT: '#14B8A6',
 					foreground: 'hsl(var(--primary-foreground))',
 				},
 				secondary: {
-					DEFAULT: '#4A90E2',
+					DEFAULT: '#64748B',
 					foreground: 'hsl(var(--secondary-foreground))',
 				},
-				accent: {
-					DEFAULT: '#F5A623',
-					foreground: 'hsl(var(--accent-foreground))',
+				// Waste Management Status Colors
+				status: {
+					clean: '#22C55E',
+					dirty: '#EF4444',
+					review: '#EAB308',
+				},
+				// Severity Colors
+				severity: {
+					low: '#22C55E',
+					medium: '#EAB308',
+					high: '#F97316',
+					critical: '#EF4444',
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
@@ -49,6 +58,12 @@ module.exports = {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))',
+				},
+				sidebar: {
+					DEFAULT: '#1E293B',
+					foreground: '#F1F5F9',
+					hover: '#334155',
+					active: '#14B8A6',
 				},
 			},
 			borderRadius: {

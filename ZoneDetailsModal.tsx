@@ -1,48 +1,58 @@
-import React from 'react';
-import { X, MapPin, Calendar, User, CheckCircle, AlertTriangle, Camera } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Zone, ZoneStatus } from '../../types';
-import { Button } from '../common/Button';
-import { getReportsByZone } from '../../data/mockData';
+import React from 'react'
+import { X, MapPin, CheckCircle, AlertTriangle, Camera } from 'lucide-react'
+import { Zone, ZoneStatus } from '@/types'
+import { useAdmin } from '@/context/AdminContext'
+import { Button } from '@/components/common/Button'
 
 interface ZoneDetailsModalProps {
-  zone: Zone;
-  onClose: () => void;
+  zone: Zone
+  onClose: () => void
 }
 
 const getStatusColor = (status: ZoneStatus) => {
   switch (status) {
     case 'clean':
-      return 'bg-green-100 text-green-700';
+      return 'bg-green-100 text-green-700'
     case 'dirty':
-      return 'bg-red-100 text-red-700';
+      return 'bg-red-100 text-red-700'
     case 'review':
-      return 'bg-yellow-100 text-yellow-700';
+      return 'bg-yellow-100 text-yellow-700'
     default:
-      return 'bg-slate-100 text-slate-700';
+      return 'bg-slate-100 text-slate-700'
   }
-};
+}
 
 const getStatusText = (status: ZoneStatus) => {
   switch (status) {
     case 'clean':
-      return 'نظيف';
+      return 'نظيف'
     case 'dirty':
-      return 'مبلّغ عنه';
+      return 'مبلّغ عنه'
     case 'review':
-      return 'قيد المراجعة';
+      return 'قيد المراجعة'
     default:
-      return status;
+      return status
   }
-};
+}
 
 export function ZoneDetailsModal({ zone, onClose }: ZoneDetailsModalProps) {
-  const reports = getReportsByZone(zone.id);
-  const lastReport = reports[0];
+  const { reports, updateZoneStatus, updateReportStatus } = useAdmin()
+  const zoneReports = reports.filter(r => r.zoneId === zone.id)
+  const lastReport = zoneReports[0]
+
+  const handleResolve = () => {
+    updateZoneStatus(zone.id, 'clean')
+    zoneReports.forEach(report => {
+      if (report.status !== 'resolved') {
+        updateReportStatus(report.id, 'resolved')
+      }
+    })
+    onClose()
+  }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50">
-      <div className="bg-white w-full sm:w-[90%] sm:max-w-md rounded-t-2xl sm:rounded-2xl max-h-[90vh] overflow-hidden animate-slideUp">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="bg-white w-full max-w-md rounded-2xl max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
           <h2 className="font-semibold text-slate-900">تفاصيل المنطقة</h2>
@@ -89,7 +99,6 @@ export function ZoneDetailsModal({ zone, onClose }: ZoneDetailsModalProps) {
                 </span>
               </div>
               <div className="flex items-center gap-2 text-sm text-slate-600">
-                <User className="w-4 h-4" />
                 <span>{lastReport.userName}</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-slate-600">
@@ -97,10 +106,11 @@ export function ZoneDetailsModal({ zone, onClose }: ZoneDetailsModalProps) {
                 <span>{lastReport.category} - {lastReport.severity}</span>
               </div>
               <p className="text-sm text-slate-600">{lastReport.description}</p>
-              <div className="w-full h-32 bg-slate-200 rounded-lg flex items-center justify-center">
-                <Camera className="w-6 h-6 text-slate-400" />
-                <span className="text-xs text-slate-400 ml-2">صورة المرفق</span>
-              </div>
+              {lastReport.beforeImage && (
+                <div className="w-full h-32 bg-slate-200 rounded-lg overflow-hidden">
+                  <img src={lastReport.beforeImage} alt="صورة البلاغ" className="w-full h-full object-cover" />
+                </div>
+              )}
             </div>
           ) : (
             <div className="bg-green-50 rounded-xl p-4 text-center">
@@ -109,23 +119,55 @@ export function ZoneDetailsModal({ zone, onClose }: ZoneDetailsModalProps) {
             </div>
           )}
 
+          {/* All Reports */}
+          {zoneReports.length > 1 && (
+            <div className="bg-slate-50 rounded-xl p-4">
+              <h3 className="font-medium text-slate-900 mb-2">جميع البلاغات ({zoneReports.length})</h3>
+              <div className="space-y-2 max-h-32 overflow-y-auto">
+                {zoneReports.map((report, index) => (
+                  <div key={report.id} className="text-sm text-slate-600 border-b border-slate-100 pb-2 last:border-0">
+                    <div className="flex items-center justify-between">
+                      <span>{report.userName}</span>
+                      <span className={`px-2 py-0.5 rounded text-xs ${
+                        report.status === 'resolved' ? 'bg-green-100 text-green-700' :
+                        report.status === 'in_review' ? 'bg-yellow-100 text-yellow-700' :
+                        'bg-red-100 text-red-700'
+                      }`}>
+                        {report.status === 'resolved' ? 'تم الحل' : report.status === 'in_review' ? 'قيد المراجعة' : 'معلق'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500">{report.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Actions */}
           <div className="space-y-2 pt-2">
             {zone.status !== 'clean' && (
-              <Button variant="primary" fullWidth>
+              <button
+                onClick={handleResolve}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-teal-600 text-white rounded-xl hover:bg-teal-700 transition-colors"
+              >
                 <CheckCircle className="w-4 h-4" />
-                أنا نظفت هذه المنطقة
-              </Button>
+                <span>أنا نظفت هذه المنطقة</span>
+              </button>
             )}
-            <Link to={`/report?zone=${zone.id}`} onClick={onClose}>
-              <Button variant={zone.status === 'clean' ? 'primary' : 'outline'} fullWidth>
-                <AlertTriangle className="w-4 h-4" />
-                الإبلاغ عن مشكلة
-              </Button>
-            </Link>
+            <button
+              onClick={onClose}
+              className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-colors ${
+                zone.status === 'clean'
+                  ? 'bg-red-500 text-white hover:bg-red-600'
+                  : 'border border-red-200 text-red-500 hover:bg-red-50'
+              }`}
+            >
+              <AlertTriangle className="w-4 h-4" />
+              <span>الإبلاغ عن مشكلة</span>
+            </button>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
