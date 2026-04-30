@@ -113,11 +113,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (fbUser) => {
       setIsLoading(true);
 
-      if (fbUser) {
-        setFirebaseUser(fbUser);
+      // Timeout to prevent infinite loading
+      const timeoutId = setTimeout(() => {
+        console.log('Auth timeout - forcing loading to false');
+        setIsLoading(false);
+      }, 8000);
 
-        // Try to get user data from Firestore
-        try {
+      try {
+        if (fbUser) {
+          setFirebaseUser(fbUser);
+
+          // Try to get user data from Firestore
           let userData = await getUserDocument(fbUser);
 
           // If user document doesn't exist, create one
@@ -127,9 +133,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
 
           setUser(userData);
-        } catch (e) {
-          console.error('Error in auth state change:', e);
-          // Create basic user data even if Firestore fails
+        } else {
+          setFirebaseUser(null);
+          setUser(null);
+        }
+      } catch (e) {
+        console.error('Error in auth state change:', e);
+        // Create basic user data even if Firestore fails
+        if (fbUser) {
+          setFirebaseUser(fbUser);
           setUser({
             id: fbUser.uid,
             name: fbUser.displayName || fbUser.email?.split('@')[0] || 'User',
@@ -141,13 +153,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             totalCleanings: 0,
             createdAt: new Date(),
           });
+        } else {
+          setFirebaseUser(null);
+          setUser(null);
         }
-      } else {
-        setFirebaseUser(null);
-        setUser(null);
+      } finally {
+        clearTimeout(timeoutId);
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     });
 
     return () => unsubscribe();
